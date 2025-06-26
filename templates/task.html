@@ -1,0 +1,68 @@
+{% extends "template.html" %}
+{% block main %}
+
+<article>
+    <header>
+        <h2>{{ task.taskTitle }}</h2>
+        <p><small>Assigned by {{ task.tutorName }}</small></p>
+    </header>
+
+    {{ taskHTML }}
+
+    <button id="addReplyButton">
+        ✏️ Reply / Answer
+    </button>
+
+    <button onclick="window.location.href='{{ url_for('questionBoard.askquestion') }}'">
+        ❓ Ask Question
+    </button>
+</article>
+
+<section class="replies">
+    <h6>Replies</h6>
+    {% if not replies %}
+    <p>There are no replies at this time!</p>
+    {% endif %}
+    {% for reply in replies %}
+    <article class="reply">
+        <p><strong>{{reply.authorStudentName}}:</strong>  <pre>{{ reply.content | e }}</pre></p>
+    </article>
+    {% endfor %}
+</section>
+
+<dialog id="replyDialog">
+  <article>
+    <h2>✏️ Reply / Answer</h2>
+    <form method="post" action="{{ url_for('task.posttaskreply') }}"">
+        <input type="hidden" name="taskId" value="{{ task.taskId }}">
+        <textarea name="replyContent" rows="4" placeholder="Write your reply here..." required></textarea>
+      <footer>
+      <button id="cancelReplyButton" class="secondary">
+        Cancel
+      </button>
+      <button>Confirm</button>
+      </footer>
+    </form>
+  </article>
+</dialog>
+
+
+{% endblock %}
+
+{% block head %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var replyModal = document.getElementById("replyDialog");
+    var replyButton = document.getElementById("addReplyButton");
+    var cancelButton = document.getElementById("cancelReplyButton");
+
+    cancelButton.onclick = function() {
+        replyModal.close();
+    }
+
+    replyButton.onclick = function() {
+        replyModal.show();
+    }
+});
+</script>
+{% endblock %}

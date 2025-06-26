@@ -1,0 +1,21 @@
+{% extends "template.html" %}
+
+{% block main %}
+<h1>📝 Task List</h1>
+
+{% if not tasks %}
+    <p>You don't have any tasks!</p>
+{% endif %}
+{% for task in tasks %}
+    <article>
+    <header>
+        <h3>{{task.taskTitle}}</h3>
+    </header>
+    <p><strong>Tutor:</strong> {{task.tutorName}}</p>
+    <footer>
+        <a href="{{url_for('task.viewtask', taskid = task.taskId)}}" class="secondary">Open Task</a>
+    </footer>
+    </article>
+{% endfor %}
+
+{% endblock %}

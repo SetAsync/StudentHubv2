@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>{% block title %}Student Hub{%endblock%}</title>
+
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="color-scheme" content="light dark">
+        <meta name="description" content="A pure HTML example, without dependencies.">
+
+        <!-- Pico.css -->
+        <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.min.css"
+        >
+        {% block head %}
+
+        {% endblock %}
+    </head>
+    <body>
+
+        <main class="container">
+            <nav>
+                <ul>
+                    <li><strong>Bloxademy Student Hub</strong></li>
+                </ul>
+                <ul>
+                    <li><a href="{{url_for('index')}}">Home</a></li>
+                </ul>
+            </nav>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="messages">
+                {% for category, message in messages %}
+                <li class="{{ category }}">
+                    <b style="color: orange;">{{ message }}</b> 
+                </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+
+
+            {% block main %}
+            
+            {%endblock%}
+            
+            {% if session.get('studentNumber') %}
+            <a href="{{url_for('auth.signout')}}">Sign Out (Student #{{session["studentNumber"]}})</a>
+            {% else %}
+            <a href="{{url_for('auth.signin')}}">Sign In</a>
+            {% endif %}
+        </main>
+    </body>
+</html>

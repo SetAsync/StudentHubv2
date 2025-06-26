@@ -1,0 +1,80 @@
+{% extends "template.html" %}
+{% block main %}
+<article>
+    <h1>Welcome, {{name}}.</h1>
+    <hr>
+
+    <button onclick="window.location.href='{{ url_for('task.tasks') }}'">
+        📚 My Tasks
+    </button>
+
+
+    <button onclick="window.location.href='{{ url_for('questionBoard.questions') }}'">
+        ❓ Question Board
+    </button>
+
+
+    <button>🗒️ Lesson Plans</button>
+</article>
+
+<article>
+    <h1>Your Resources</h1>
+    <hr>
+    {% if resources %}
+        {% for courseName in resources %}
+            <u>{{courseName}}</u>
+            <ul>
+                {% if not resources[courseName] %}
+                    <li>There are no public resources for this course!</li>
+                {% endif %}
+                {% for courseResource in resources[courseName] %}
+                    <li>
+                        <a target="_blank" href="{{courseResource.resourceLink}}">{{courseResource.resourceName}}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+    <p>You haven't taken part in any classes with resources!</p>
+    <p>If this is a mistake, get in touch!</p>
+    {% endif %}
+
+</article>
+
+<article>
+    <h1>Loyalty Points</h1>
+    <p>If your tutors offer loyalty points, you'll see your current balance below!</p>
+    <p>When you get to four, you can exchange them for a free 30 minute lesson - or £7.50 credit.</p>
+    <hr>
+    {% if loyaltyData %}
+        {% for loyalty in loyaltyData %}
+            <h5>{{loyalty.tutorName}} - {{loyalty.currentBalance}} / 4</h5>
+
+            <div style="background-color: #e0e0e0; border-radius: 10px; width: 100%; height: 20px;">
+            <div style="
+                width: {{ (loyalty.currentBalance / 4) * 100 }}%;
+                background-color: #4caf50;
+                height: 100%;
+                border-radius: 10px;">
+            </div>
+            </div>
+            <p>{{ loyalty.currentBalance }} / 4</p>
+
+
+            {% if loyalty.currentBalance == 4 %}
+            <button>Redeem</button>
+            {% else %}
+            <p>{{4 - loyalty.currentBalance}} more points to go!</p>
+            {% endif %}
+            <hr>
+            
+        {% endfor %}
+    {% else %}
+    <p>You don't currently have any loyalty points from any of your tutors!</p>
+    <p>Either you haven't earned any yet, or your tutor doesn't offer them.</p>
+    <p>Get in touch if this is a mistake!</p>
+    {% endif %}
+
+
+</article>
+{% endblock %}

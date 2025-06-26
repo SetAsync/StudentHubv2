@@ -1,0 +1,70 @@
+{% extends "template.html" %}
+
+{% block head %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var replyModal = document.getElementById("replyDialog");
+    var replyButton = document.getElementById("addReplyButton");
+    var cancelButton = document.getElementById("cancelReplyButton");
+
+    cancelButton.onclick = function() {
+        replyModal.close();
+    }
+
+    replyButton.onclick = function() {
+        replyModal.show();
+    }
+});
+</script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='codesyntax.css') }}">
+{% endblock %}
+
+
+{% block main %}
+<article>
+    <header>
+        <h5>{{ post.postTitle }}</h5>
+    </header>
+    {{ postHTML | safe }}
+    <footer>
+        <p>Question asked by {{ post.authorName }}.</p>
+        <button>Question Answered</button>
+    </footer>
+</article>
+
+<section class="replies">
+    <h6>Replies</h6>
+    {% if not replies %}
+    <p>There are no replies at this time!</p>
+    {% endif %}
+    {% for reply in replies %}
+    <article class="reply">
+        <p><strong>{{reply.authorStudentName}}:</strong>  <pre>{{ reply.content | e }}</pre></p>
+    </article>
+    {% endfor %}
+
+    
+
+    <button id = "addReplyButton" class="primary">Add Reply</button>
+</section>
+
+<dialog id="replyDialog">
+  <article>
+    <h2>Post Reply</h2>
+    <form method="post" action="{{ url_for('questionBoard.postreply') }}">
+        <input type="hidden" name="questionId" value="{{ post.questionId }}">
+        <textarea name="replyContent" rows="4" placeholder="Write your reply here..." required></textarea>
+      <footer>
+      <button id="cancelReplyButton" class="secondary">
+        Cancel
+      </button>
+      <button>Confirm</button>
+      </footer>
+    </form>
+  </article>
+</dialog>
+
+{% endblock %}
+
+

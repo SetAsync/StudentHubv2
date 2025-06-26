@@ -1,0 +1,28 @@
+{% extends "template.html" %}
+{% block main %}
+
+<h2>❓ Ask a Question</h2>
+<p>Need help with something you're learning? Use the form below to post a question for your tutor.</p>
+
+<form method="post" enctype="multipart/form-data">
+  <label for="postTitle">Title</label>
+  <input type="text" id="postTitle" name="postTitle" placeholder="e.g. Trouble with RemoteEvents" required>
+
+  <label for="postContent">Question Details</label>
+  <textarea id="postContent" name="postContent" rows="6" placeholder="Describe what you're stuck on..." required></textarea>
+
+  <label for="course">Select Course</label>
+  <select id="course" name="course" required>
+    <option disabled selected value="">Choose a course</option>
+    {% for Course in CourseList %}
+      <option value="{{ Course.courseNumber }}">{{ Course.courseName }}</option>
+    {% endfor %}
+  </select>
+
+  <!-- <label for="image">Attach Image (optional)</label>
+  <input type="file" id="image" name="image" accept="image/*"> -->
+
+  <button type="submit">📤 Post Question</button>
+</form>
+
+{% endblock %}
