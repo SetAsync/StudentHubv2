@@ -52,7 +52,6 @@ Jinja2==3.1.6
 jsonify==0.5
 jsonpickle==4.0.5
 lxml==5.4.0
-maigret @ file:///C:/Users/setas/Documents/maigret/maigret-main
 Markdown==3.8.2
 MarkupSafe==3.0.2
 matplotlib-inline==0.1.7
