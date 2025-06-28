@@ -3,6 +3,8 @@ from db import db, User, Question, CourseEntry, Course, QuestionReplies
 import uuid, formatting
 QuestionBlueprint = Blueprint('questionBoard', __name__, url_prefix="/")
 
+#// Views
+
 @QuestionBlueprint.route('/questions/')
 def questions():
     if "studentNumber" not in session.keys():
@@ -83,18 +85,69 @@ def askquestion():
 
     return render_template("newQuestion.html", CourseList=studentCourses)
 
-@QuestionBlueprint.route("/postreply/", methods=["POST"])
-def postreply():
+#// API
+
+@QuestionBlueprint.route("/resolvequestion/<string:postid>", methods=["POST"])
+def resolvequestion(postid):
+    # Fetch Profile
     if "studentNumber" not in session:
         return redirect(url_for("auth.signin"))
     studentProfile = User.query.filter_by(studentNumber = session["studentNumber"]).first()
     
+    # Fetch Post
+    post = Question.query.filter_by(questionId = postid).first()
+    if not post:
+        flash("Invalid post!")
+        return redirect(url_for("questionBoard.questions"))
+    
+
+    # Validate Action
+    if not ((post.authorStudentNumber == studentProfile.studentNumber) or (studentProfile.role > 0)):
+        flash("Only the post author may close their question!")
+        return redirect(url_for("questionBoard.question", postid = postid))
+
+    db.session.delete(post)
+
+    postReplies = QuestionReplies.query.filter_by(questionId = postid).all()
+    for v in postReplies:
+        db.session.delete(v)
+
+    db.session.commit()
+    flash("Your question has been resolved/removed!", "message")
+    return redirect(url_for("questionBoard.questions"))
+
+
+@QuestionBlueprint.route("/postreply/", methods=["POST"])
+def postreply():
+    # Valdiate Profile
+    if "studentNumber" not in session:
+        return redirect(url_for("auth.signin"))
+    studentProfile = User.query.filter_by(studentNumber = session["studentNumber"]).first()
+    
+    # Validate Fields
     replyContent = request.form.get("replyContent")
     postID = request.form.get("questionId")
     if not all([replyContent, postID]):
         flash("Missing fields!")
         return redirect(url_for("questionBoard.questions"))
     
+    # Adjust Question
+    originalQuestion = Question.query.filter_by(questionId = postID).first()
+    if not originalQuestion:
+        flash("Invalid Field!")
+        return redirect(url_for("questionBoard.questions"))
+
+    # 0 Tutor, 1 Student, 2 Resolved
+    if originalQuestion.postStatus == 0:
+        if studentProfile.role == 0:
+            originalQuestion.postStatus = 1
+    elif originalQuestion.postStatus == 1 and studentProfile.studentNumber == originalQuestion.authorStudentNumber:
+        originalQuestion.postStatus = 0
+
+    
+    db.session.add(originalQuestion)
+
+    # Create Reply
     newReply = QuestionReplies(
         replyId = str(uuid.uuid4()),
         questionId = postID,

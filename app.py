@@ -36,7 +36,13 @@ def index():
 
         RewardPoints = LoyaltyPoints.query.filter_by(studentNumber = Student.studentNumber).all()
 
-        return render_template("hub.html", name = Student.firstName, resources = StudentResources, loyaltyData = RewardPoints)
+        return render_template(
+            "hub.html", 
+            name = Student.firstName, 
+            resources = StudentResources, 
+            loyaltyData = RewardPoints,
+            tutor = Student.role > 0
+        )
     else:
         flash("You must be signed in to access this page!")
         return redirect(url_for("auth.signin"))

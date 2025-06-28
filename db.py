@@ -61,3 +61,11 @@ class Task(db.Model):
     studentNumber = db.Column(db.Integer, nullable = False)
     taskTitle = db.Column(db.String, nullable = False)
     taskContent = db.Column(db.String, nullable = False)
+
+class StudentNote(db.Model):
+    noteId = db.Column(db.String, primary_key = True, nullable = False)
+    studentId = db.Column(db.Integer, nullable = False)
+    tutorId = db.Column(db.Integer, nullable = False)
+    visibility = db.Column(db.Integer, nullable = False)
+    authorName = db.Column(db.String, nullable = False)
+    noteContent = db.Column(db.String, nullable = False)

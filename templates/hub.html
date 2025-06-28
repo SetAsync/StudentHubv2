@@ -13,8 +13,13 @@
         ❓ Question Board
     </button>
 
-
     <button>🗒️ Lesson Plans</button>
+
+    {% if tutor %}
+    <button onclick="window.location.href='{{ url_for('tutor.tutorhub') }}'">
+        📚 Tutor Hub
+    </button>
+    {% endif %}
 </article>
 
 <article>

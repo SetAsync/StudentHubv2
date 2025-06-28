@@ -1,4 +1,11 @@
 {% extends "template.html" %}
+
+{% set status_text = {
+  0: 'Awaiting a reply from a tutor.',
+  1: 'Awaiting a reply from the student.',
+  2: '✅ Resolved'
+} %}
+
 {% block main %}
 
 <h2>❓ Question Board</h2>
@@ -14,28 +21,23 @@
 <section>
   <h4>Your Questions</h4>
   {% if not StudentQuestions %}
-    <p><em>No questions yet. Use the button above to ask one!</em></p>
+  <p><em>No questions yet. Use the button above to ask one!</em></p>
   {% else %}
-    {% set status_text = {
-        0: 'Awaiting a reply from a tutor.',
-        1: 'Awaiting a reply from you.',
-        2: '✅ Resolved'
-    } %}
-    {% for Question in StudentQuestions %}
-      <article>
-        <header>
-          <h5>
-            <a href="{{ url_for('questionBoard.question', postid=Question.questionId) }}">
-              {{ Question.postTitle }}
-            </a>
-          </h5>
-        </header>
-        <p><strong>Status:</strong> {{ status_text[Question.postStatus] }}</p>
-        <footer>
-          <small>Posted by you</small>
-        </footer>
-      </article>
-    {% endfor %}
+  {% for Question in StudentQuestions %}
+  <article>
+    <header>
+      <h5>
+        <a href="{{ url_for('questionBoard.question', postid=Question.questionId) }}">
+          {{ Question.postTitle }}
+        </a>
+      </h5>
+    </header>
+    <p><strong>Status:</strong> {{ status_text[Question.postStatus] }}</p>
+    <footer>
+      <small>Posted by you</small>
+    </footer>
+  </article>
+  {% endfor %}
   {% endif %}
 </section>
 
@@ -44,23 +46,23 @@
 <section>
   <h4>Other Public Questions</h4>
   {% if not PublicQuestions %}
-    <p><em>No public questions to display.</em></p>
+  <p><em>No public questions to display.</em></p>
   {% else %}
-    {% for Question in PublicQuestions %}
-      <article>
-        <header>
-          <h5>
-            <a href="{{ url_for('questionBoard.question', postid=Question.questionId) }}">
-              {{ Question.postTitle }}
-            </a>
-          </h5>
-        </header>
-        <p><strong>Status:</strong> {{ status_text[Question.postStatus] }}</p>
-        <footer>
-          <small>Posted by {{ Question.authorName }}</small>
-        </footer>
-      </article>
-    {% endfor %}
+  {% for Question in PublicQuestions %}
+  <article>
+    <header>
+      <h5>
+        <a href="{{ url_for('questionBoard.question', postid=Question.questionId) }}">
+          {{ Question.postTitle }}
+        </a>
+      </h5>
+    </header>
+    <p><strong>Status:</strong> {{ status_text[Question.postStatus] }}</p>
+    <footer>
+      <small>Posted by {{ Question.authorName }}</small>
+    </footer>
+  </article>
+  {% endfor %}
   {% endif %}
 </section>
 

@@ -1,0 +1,380 @@
+{% extends "template.html" %}
+{% block main %}
+<style>
+  main.container {
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+
+  h1 {
+    text-align: center;
+    color: #3f51b5;
+    margin-bottom: 2rem;
+  }
+
+  /* Timeline style for Lesson Info + Booking */
+  .timeline {
+    border-left: 3px solid #3f51b5;
+    margin-left: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: -9px;
+    top: 0;
+    width: 15px;
+    height: 15px;
+    background: #3f51b5;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px #c5cae9;
+  }
+
+  .timeline-item {
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline-item h2 {
+    margin: 0 0 0.3rem 0;
+    color: #3f51b5;
+    font-weight: 600;
+  }
+  .timeline-item dl {
+    margin: 0;
+  }
+  .timeline-item dt {
+    font-weight: 700;
+    margin-top: 0.5rem;
+    color: #2c387e;
+  }
+  .timeline-item dd {
+    margin-left: 0;
+    margin-bottom: 0.3rem;
+    color: #555;
+  }
+  .timeline-item a {
+    color: #3f51b5;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .timeline-item a:hover {
+    text-decoration: underline;
+  }
+
+  pre.lesson-note {
+    background: #f5f7ff;
+    border-left: 5px solid #3f51b5;
+    padding: 1rem;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    margin-top: 0.5rem;
+    border-radius: 4px;
+    color: #444;
+  }
+  pre.lesson-note:empty {
+    display: none;
+  }
+
+  /* Section cards */
+  section {
+    background: #f5f7ff;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(63, 81, 181, 0.15);
+    padding: 1.5rem 1.8rem;
+    margin-bottom: 2rem;
+  }
+  section h2 {
+    color: #3f51b5;
+    border-bottom: 2px solid #7986cb;
+    padding-bottom: 0.3rem;
+    margin-top: 0;
+    font-weight: 700;
+  }
+
+  /* Notes */
+  .note {
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .note p {
+    margin: 0 0 0.4rem 0;
+  }
+  .note small {
+    color: #666;
+    font-style: italic;
+  }
+  .note form {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+  .note form button {
+    background: transparent;
+    border: none;
+    color: #3f51b5;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .note form button:hover {
+    text-decoration: underline;
+  }
+
+  /* Forms */
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #303f9f;
+  }
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 0.5em 0.7em;
+    border-radius: 5px;
+    border: 1px solid #aab6fe;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus, textarea:focus {
+    border-color: #3f51b5;
+    outline: none;
+  }
+  textarea {
+    resize: vertical;
+  }
+  button.primary {
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    padding: 0.6em 1.2em;
+    border-radius: 5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 0.8rem;
+  }
+  button.primary:hover {
+    background-color: #283593;
+  }
+  button.secondary {
+    background-color: transparent;
+    border: 2px solid #3f51b5;
+    color: #3f51b5;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: 700;
+    padding: 0.5em 1.2em;
+    margin-left: 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: 0.8rem;
+  }
+  button.secondary:hover {
+    background-color: #3f51b5;
+    color: white;
+  }
+  .btn-group {
+    margin-top: 0.6rem;
+  }
+</style>
+
+<main class="container">
+
+  <h1>📘 Lesson Details</h1>
+
+  <!-- Timeline: Lesson Info + Booking -->
+  <div class="timeline" aria-label="Lesson Information and Booking Details">
+
+    <div class="timeline-item" role="region" aria-labelledby="service-title">
+      <h2 id="service-title">Service</h2>
+      <p>{{ appointment.service_name }}</p>
+    </div>
+
+    <div class="timeline-item" role="region" aria-labelledby="start-title">
+      <h2 id="start-title">Start Time</h2>
+      <p>{{ appointment.start.strftime('%A, %d %B %Y at %H:%M') }}</p>
+    </div>
+
+    <div class="timeline-item" role="region" aria-labelledby="location-title">
+      <h2 id="location-title">Location</h2>
+      <p>
+        {% if appointment.hangouts_link %}
+          <a href="{{ appointment.hangouts_link }}" target="_blank" rel="noopener">Join Google Meet</a>
+        {% else %}
+          Not available
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="timeline-item" role="region" aria-labelledby="status-title">
+      <h2 id="status-title">Booking Status</h2>
+      {% set booking = appointment.bookings[0] %}
+      <p>{{ booking.status|capitalize }}</p>
+    </div>
+
+    <div class="timeline-item" role="region" aria-labelledby="customer-title">
+      <h2 id="customer-title">Customer</h2>
+      <p>{{ booking.customer.fullname }}</p>
+    </div>
+
+    {% if appointment.note %}
+    <div class="timeline-item" role="region" aria-labelledby="lesson-note-title">
+      <h2 id="lesson-note-title">Lesson Note</h2>
+      <pre class="lesson-note">{{ appointment.note }}</pre>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Notes Section -->
+{% if booking.status == "approved" %}
+  <hr>
+  <h1>Tutor Options</h1>
+  {% if client %}
+    <p>Student Number: {{client.id}}</p>
+    <section aria-labelledby="notes-title">
+    <h2 id="notes-title">📌 Customer Notes</h2>
+
+    {% for note in notes %}
+    <article id="note-{{note.noteId}}" class="note" role="note">
+      <p>{{ note.noteContent | replace('\n', '<br>') | safe }}</p>
+      <small>– {{ note.authorName }}</small><br>
+      <small>- {{ "For Me" if note.visibility == 1 else "For All Tutors" }}</small>
+      <form onsubmit="delete_note(event, '{{note.noteId}}')" aria-label="Delete note">
+        <input type="hidden" name="note_id" value="{{ note.id }}">
+        <button type="submit">Delete</button>
+      </form>
+    </article>
+    {% else %}
+    <p><em>No notes available.</em></p>
+    {% endfor %}
+
+    <form onsubmit = "create_note(event)" aria-label="Add a new note">
+      <label for="new_note">Add Note</label>
+      <textarea id="new_note" name="new_note" rows="3" placeholder="Write a new note..." required></textarea>
+      <select name="noteVisibility">
+        <option value="1">For Me</option>
+        <option value="2">For All Tutors</option>
+      </select>
+      <button type="submit" class="primary">Add Note</button>
+    </form>
+  </section>
+
+  <!-- Lesson Summary -->
+  <section aria-labelledby="summary-title">
+    <h2 id="summary-title">📝 Submit Lesson Summary</h2>
+    <form id="summaryForm">
+      <label for="summary_text">Summary</label>
+      <textarea id="summary_text" name="summary_text" rows="5" placeholder="Write lesson summary here...">
+In this lesson, we covered:
+-> M1
+Next lesson, we'll cover:
+-> M2
+      </textarea>
+      <div class="btn-group">
+        <button type="submit" name="action" value="send" class="primary">Send</button>
+        <button type="submit" style="background-color: red;" name="action" value="noshow" class="primary">No Show</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Create Assignment -->
+  <section aria-labelledby="assignment-title">
+    <h2 id="assignment-title">📚 Create New Assignment</h2>
+    <form id="assignmentForm">
+      <label for="assignment_title">Title</label>
+      <input id="assignment_title" name="assignment_title" type="text" placeholder="Assignment title" required>
+
+      <label for="assignment_content" style="margin-top: 1rem;">Content</label>
+      <textarea id="assignment_content" name="assignment_content" rows="5" placeholder="Assignment details..." required></textarea>
+
+      <button id="submitButton" type="submit" class="primary" style="margin-top: 0.8rem;">Create Assignment</button>
+    </form>
+    <p id="responseMessage"></p>
+  </section>
+
+  {% else %}
+  <p>Failed to get exactly one booking portal account belonging to the student, please get in touch with support and tell the student they'll recieve a task/summary after the issue is fixed.</p>
+  {% endif %}
+
+{% endif %}
+</main>
+
+<script>
+function delete_note(event, id) {
+  event.preventDefault();
+  const noteFrame = document.getElementById("note-"+id)
+  const data = {
+    noteId: id
+  }
+
+  fetch("/deleteNote", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (!response.ok) {
+      // Server returned an error status (like 400 or 500)
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.text(); // or .json() if you're expecting JSON
+  })
+  .then(data => {
+    noteFrame.remove();
+  })
+  .catch(error => {
+    alert("Error!");
+  });
+}
+
+function create_note(event) {
+  event.preventDefault();
+  const noteText = document.getElementById("new_note").value;
+  const visibility = event.target.noteVisibility.value;
+
+  const data = {
+    client: {{client.id}},
+    noteText: noteText,
+    noteVisibility: visibility
+  }
+
+  fetch("/createNote", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (!response.ok) {
+      // Server returned an error status (like 400 or 500)
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.text(); // or .json() if you're expecting JSON
+  })
+  .then(data => {
+    alert("Success! Refresh the page to view the note.");
+  })
+  .catch(error => {
+    alert("Error!");
+  });
+}
+</script>
+
+{% endblock %}
+

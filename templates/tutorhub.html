@@ -1,0 +1,19 @@
+{% extends "template.html" %}
+{% block main %}
+<h1>Tutor Hub</h1>
+
+<article>
+    <h1>Welcome!</h1>
+    <hr>
+
+    <button onclick="window.location.href='{{ url_for('tutor.liveteach') }}'">
+        📞 Live Teach
+    </button>
+
+
+    <button onclick="window.location.href='https://setasynctutor.admin.trafft.com'">
+        📅 Booking Portal
+    </button>
+</article>
+
+{% endblock %}

@@ -29,7 +29,9 @@ document.addEventListener("DOMContentLoaded", function() {
     {{ postHTML | safe }}
     <footer>
         <p>Question asked by {{ post.authorName }}.</p>
-        <button>Question Answered</button>
+        <a href="{{url_for('questionBoard.resolvequestion', postid=post.questionId)}}">✅ Mark question as answered ✅</a>
+
+
     </footer>
 </article>
 
@@ -46,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     
 
-    <button id = "addReplyButton" class="primary">Add Reply</button>
+    <button id = "addReplyButton" class="primary">💬 Add Reply</button>
 </section>
 
 <dialog id="replyDialog">
